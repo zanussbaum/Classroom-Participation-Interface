@@ -14,31 +14,32 @@
       <input type="submit"/>
     </form>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
     <script type="text/javascript">
       var socket = io.connect('http://' + document.domain + ':' + location.port);
       socket.on( 'connect', function() {
-        socket.emit('student connection', {
+        socket.emit( 'my event', {
           data: 'User Connected'
         } )
         var form = $( 'form' ).on( 'submit', function( e ) {
           e.preventDefault()
           let user_name = $( 'input.username' ).val()
           let user_input = $( 'input.message' ).val()
-          socket.emit('student response', {
+          socket.emit( 'student response', {
             user_name : user_name,
             message : user_input
           } )
-        //   $( 'input.message' ).val( '' ).focus()
+          $( 'input.message' ).val( '' ).focus()
         } )
-      } );
-      socket.on('teacher question', function( msg ) {
-        console.log( msg );
-        if( typeof msg.user_name !== 'undefined' ) {
+      } )
+      socket.on( 'teacher question', function( msg ) {
+        console.log( msg )
+        if( typeof msg.question!== 'undefined' ) {
           $( 'h3' ).remove()
           $( 'div.message_holder' ).append( '<div><b style="color: #000">'+msg.question+'</b> '+'</div>' )
         }
-      });
+      })
     </script>
 
   </body>

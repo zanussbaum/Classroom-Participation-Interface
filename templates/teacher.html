@@ -13,31 +13,30 @@
       <input type="submit"/>
     </form>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
     <script type="text/javascript">
       var socket = io.connect('http://' + document.domain + ':' + location.port);
       socket.on( 'connect', function() {
-        socket.emit( 'teacher connected', {
+        socket.emit( 'my event', {
           data: 'User Connected'
-        } );
-        var form = document.getElementsByName('form').addEventListener( 'submit', function( e ) {
-          if(!isValid){
-            e.preventDefault()
-          }
-          let question = $( 'input.question' ).val();
+        } )
+        var form = $( 'form' ).on( 'submit', function( e ) {
+          e.preventDefault()
+          let question = $( 'input.question' ).val()
           socket.emit( 'teacher question', {
-            question : question
-          } );
-          $( 'input.message' ).val( '' ).focus()
-        } );
-      } );
-      socket.on('student response', function( msg ) {
-        console.log( msg );
+            question: question
+          } )
+          $( 'input.question' ).val( '' ).focus()
+        } )
+      } )
+      socket.on( 'student response', function( msg ) {
+        console.log( msg )
         if( typeof msg.user_name !== 'undefined' ) {
           $( 'h3' ).remove()
-          $( 'div.message_holder' ).append( '<div><b style="color: #000">'+msg.user_name+'</b> '+msg.message+'</div>' );
+          $( 'div.message_holder' ).append( '<div><b style="color: #000">'+msg.user_name+'</b> '+msg.message+'</div>' )
         }
-      });
+      })
     </script>
 
   </body>

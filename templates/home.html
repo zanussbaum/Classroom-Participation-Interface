@@ -4,6 +4,28 @@
     <title>Homepage</title>
   </head>
   <body>
-      <button type="button" onclick="window.location.href = '{{ url_for('student') }} ';"> Student</button>
-      <button type="button" onclick="window.location.href = '{{ url_for('teacher') }} ';"> Teacher</button>
+      <form id=classList>
+        <select id=class name="classes" form="classList">
+          <option value="CSC351">Database</option>
+          <option value="CSC370">Machine Reasoning</option>
+        </select>
+        <select id=section name="classes" form="classList">
+            <option value="A">A</option>
+            <option value="B">B</option>
+          </select>
+        <input type="submit" value="Submit" class="submitButton">
+      </form>
+
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+      <script type="text/javascript">
+      var form = $( 'form' ).on( 'submit', function( e ) {
+        e.preventDefault()
+        let course = $('#class').val()
+        let section = $('#section').val()
+        console.log(course)
+        console.log(section)
+        window.location.href = "{{url_for('teacher', course=course, section=section, class_number=5, hash=5)}}"
+      })
+      </script>
+      
     </body>
