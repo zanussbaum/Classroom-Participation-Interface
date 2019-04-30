@@ -4,28 +4,18 @@
     <title>Homepage</title>
   </head>
   <body>
-      <form id=classList>
-        <select id=class name="classes" form="classList">
+      <form method="POST">
+        <select name="course">
           <option value="CSC351">Database</option>
           <option value="CSC370">Machine Reasoning</option>
         </select>
-        <select id=section name="classes" form="classList">
+        <select name="section">
             <option value="A">A</option>
             <option value="B">B</option>
           </select>
+        <input name='teacherName' type="text" id="teacher" placeholder="teacher name"/>
+        <input type='radio' name='person' value='teacher'>Teacher<br>
+        <input type='radio' name='person' value='student'>Student<br>
         <input type="submit" value="Submit" class="submitButton">
       </form>
-
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-      <script type="text/javascript">
-      var form = $( 'form' ).on( 'submit', function( e ) {
-        e.preventDefault()
-        let course = $('#class').val()
-        let section = $('#section').val()
-        console.log(course)
-        console.log(section)
-        window.location.href = "{{url_for('teacher', course=course, section=section, class_number=5, hash=5)}}"
-      })
-      </script>
-      
     </body>
