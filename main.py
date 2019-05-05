@@ -8,6 +8,7 @@ TODO:
     Create a way to input all the respones from a certain class 
 
     Make UI look better lol 
+    About page/homepage
 """
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -80,7 +81,7 @@ def student_response(json, methods=['GET', 'POST']):
 def teacher_question(json, methods=['GET', 'POST']):
     print('a teacher posed a question')
     print(json)
-    #can parse json here to put into database
+    #can parse json here to put into database   
     socketio.emit('teacher question', json, callback=questionPosed)
 
 if __name__ == '__main__':
