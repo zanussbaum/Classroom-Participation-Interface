@@ -92,7 +92,6 @@ class _Course_Sections:
         for i in self.collection:
             if i.professor_data.getName() == teacher.getName():
                 #Not sure which one to send here 'socket' or 'return'
-                socket.send(i)
                 return i
 
 class Course_Section_Meeting(Course_Section, Question, Teacher):
@@ -127,7 +126,6 @@ class _Course_Section_Meeting(Course_Section, Question, Teacher):
     def findByProfessor(self, teacher: 'Teacher'):
         for i in self.collection:
             if i.course_section.professor_data == teacher:
-                socket.send(i)
                 return i
 
 
