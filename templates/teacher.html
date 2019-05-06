@@ -18,8 +18,9 @@
     <script type="text/javascript">
       var socket = io.connect('http://' + document.domain + ':' + location.port);
       socket.on( 'connect', function() {
-        socket.emit( 'my event', {
-          data: 'User Connected'
+        socket.emit( 'teacher connect', {
+          data: 'User Connected',
+          url: document.URL
         } )
         var form = $( 'form' ).on( 'submit', function( e ) {
           e.preventDefault()

@@ -5,7 +5,7 @@ from pymongo import MongoClient
 MONGO_HOST = "localhost"
 MONGO_PORT = 27017
 MONGO_DATABASE = "VirtualClassroom"
-MONGO_CLIENT = client = MongoClient(MONGO_HOST,MONGO_CLIENT)
+MONGO_CLIENT = client = MongoClient(MONGO_HOST,MONGO_PORT)
 
 def get_database() -> 'pymongo.database.Database':
     return MONGO_CLIENT.get_database(MONGO_DATABASE)
