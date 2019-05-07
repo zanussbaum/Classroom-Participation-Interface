@@ -9,7 +9,19 @@ TODO:
     Create a way to input all the respones from a certain class --> database call, then put into {{}}
         in html  
 
-    Make UI look better lol --> ask if this is necessary 
+    teacher page that has choose previous session or create
+        make sure to pass in session=session, data=data?
+            may not need to pass in data if you're using socket 
+                ^create on submit that addds data after event 
+
+    add in database part
+        add in json, query database
+        get courses
+
+    QR code 
+
+
+    sell it as a teaching tool, student tool 
 """
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -20,7 +32,6 @@ which_room = {}
 @app.route('/about')
 def about():
     return render_template('about.html')
-
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
@@ -40,7 +51,9 @@ def home():
         else:
             return redirect(url_for('student', teacher=teacher, course=course, section=section, class_number=class_number))
     
-    return render_template('home.html')
+    #query database, get courses
+    courses = None
+    return render_template('home.html',courses=courses)
     
 @app.route('/student/<teacher>/<course>/<section>/<class_number>')
 def student(teacher, course, section, class_number):
@@ -152,11 +165,16 @@ def disconnect():
 
     room = which_room.get(user)
 
-    leave_room(room)
+    try:
+        leave_room(room)
 
-    people[room].remove(user)
+        people[room].remove(user)
 
-    print("there are now %d users in %s" %(len(people[room]), room))
+        print("there are now %d users in %s" %(len(people[room]), room))
+    except ValueError:
+        print("the teacher has left the session")
+        pass
+    
 
 
 if __name__ == '__main__':

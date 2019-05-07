@@ -1,18 +1,59 @@
 <!DOCTYPE html>
   <html lang="en">
   <head>
+      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <title>Teacher Homepage</title>
   </head>
   <body>
+    <div class="container-fluid">
+      <div class="card">
+          <div class="card-header">
+            <a href="/" class="btn btn-outline-primary">Home</a>
+          </div>
+          <div class="card-body">
+            <h3 style='color: #ccc;font-size: 30px;'>No responses yet..</h3>
+          <div class="message_holder"></div>
+          {% if sessions %}
+          <form method="POST" name="previous-sessions">
+              <div class="form-group">
+                  <label for="exampleInputEmail1">Previous-sessions</label>
+                  <select class="form-control" name="session">
+                      {% for number in session %}
+                      <option> {{number}}</option>
+                      {%endfor%}
+                  </select>
+              </div>
+              <button type="submit" class="btn btn-outline-primary">Get Previous Sessions</button>
+          </form>
+          {%endif%}
+          
+          <form method="POST" name="form">
+            <div class="form-group">
+                <label for="exampleInputEmail1">Question</label>
+                <input type="text" class="question" placeholder="question to pose"/>
+            </div>
+            <button type="submit" class="btn btn-outline-primary">Submit Question</button>
+          </form>
+          </div>
+        </div>
+      <!--
+        may not need this part
 
-    <h3 style='color: #ccc;font-size: 30px;'>No responses yet..</h3>
-    <div class="message_holder"></div>
-
-    <form method="POST" name="form">
-      <input type="text" class="question" placeholder="Question"/>
-      <input type="submit"/>
-    </form>
-
+        <div class="previous-message">
+      {% if data %}
+        <ul>
+          {%for response in data %}
+          <li>{{response}}</li>
+          {%endfor%}
+        </ul>
+        {%endif%}
+    </div>
+      -->
+    
+  </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
     <script type="text/javascript">
@@ -24,6 +65,7 @@
         } )
         var form = $( 'form' ).on( 'submit', function( e ) {
           e.preventDefault()
+          console.log($( 'form' ))
           let question = $( 'input.question' ).val()
           socket.emit( 'teacher question', {
             question: question
@@ -39,6 +81,5 @@
         }
       })
     </script>
-
   </body>
   </html>
