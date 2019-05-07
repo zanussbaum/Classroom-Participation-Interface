@@ -1,0 +1,374 @@
+Conors-MBP:Classroom-Participation-Interface conorhuh$ python3 -m flask run
+ * Environment: production
+   WARNING: Do not use the development server in a production environment.
+   Use a production WSGI server instead.
+ * Debug mode: off
+[2019-05-07 03:06:49,540] WARNING in __init__: Flask-SocketIO is Running under Werkzeug, WebSocket is not available.
+ * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+127.0.0.1 - - [07/May/2019 03:06:51] "GET / HTTP/1.1" 200 -
+student
+127.0.0.1 - - [07/May/2019 03:06:56] "POST / HTTP/1.1" 302 -
+127.0.0.1 - - [07/May/2019 03:06:56] "GET /student/Mendes/CSC351/A/1 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:06:56] "GET /socket.io/?EIO=3&transport=polling&t=MgH7UOP HTTP/1.1" 200 -
+student connection to url http://127.0.0.1:5000/student/Mendes/CSC351/A/1
+message handler error
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/engineio/server.py", line 505, in _trigger_event
+    return self.handlers[event](*args)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/socketio/server.py", line 590, in _handle_eio_message
+    self._handle_event(sid, pkt.namespace, pkt.id, pkt.data)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/socketio/server.py", line 526, in _handle_event
+    self._handle_event_internal(self, sid, data, namespace, id)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/socketio/server.py", line 529, in _handle_event_internal
+    r = server._trigger_event(data[0], namespace, sid, *data[1:])
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/socketio/server.py", line 558, in _trigger_event
+    return self.handlers[namespace][event](*args)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/flask_socketio/__init__.py", line 259, in _handler
+    *args)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/flask_socketio/__init__.py", line 660, in _handle_event
+    ret = handler(*args)
+  File "/Users/conorhuh/Desktop/Davidson/Spring 2019/CSC 3530 Database Systems/Final Project/Classroom-Participation-Interface/app.py", line 153, in student_connection
+    people[url].append(student)
+KeyError: '/Mendes/CSC351/A/1'
+127.0.0.1 - - [07/May/2019 03:06:56] "POST /socket.io/?EIO=3&transport=polling&t=MgH7UPE&sid=89c77c13ea6545859411ec35e9d506e3 HTTP/1.1" 200 -
+received a student response: {'user_name': 'Conor', 'message': 'answer'}
+message handler error
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/engineio/server.py", line 505, in _trigger_event
+    return self.handlers[event](*args)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/socketio/server.py", line 590, in _handle_eio_message
+    self._handle_event(sid, pkt.namespace, pkt.id, pkt.data)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/socketio/server.py", line 526, in _handle_event
+    self._handle_event_internal(self, sid, data, namespace, id)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/socketio/server.py", line 529, in _handle_event_internal
+    r = server._trigger_event(data[0], namespace, sid, *data[1:])
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/socketio/server.py", line 558, in _trigger_event
+    return self.handlers[namespace][event](*args)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/flask_socketio/__init__.py", line 259, in _handler
+    *args)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/flask_socketio/__init__.py", line 660, in _handle_event
+    ret = handler(*args)
+  File "/Users/conorhuh/Desktop/Davidson/Spring 2019/CSC 3530 Database Systems/Final Project/Classroom-Participation-Interface/app.py", line 191, in student_response
+    current_Question = Questions.getOneQuestion(query = ids)
+  File "/Users/conorhuh/Desktop/Davidson/Spring 2019/CSC 3530 Database Systems/Final Project/Classroom-Participation-Interface/db.py", line 92, in getOneQuestion
+    id = query['question']
+KeyError: 'question'
+127.0.0.1 - - [07/May/2019 03:07:05] "POST /socket.io/?EIO=3&transport=polling&t=MgH7WOX&sid=89c77c13ea6545859411ec35e9d506e3 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:07:13] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:07:19] "GET / HTTP/1.1" 200 -
+teacher
+127.0.0.1 - - [07/May/2019 03:07:24] "POST / HTTP/1.1" 302 -
+127.0.0.1 - - [07/May/2019 03:07:24] "GET /teacher/Mendes/CSC351/A/0/29009914090627776462279945292371583475 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:07:24] "GET /socket.io/?EIO=3&transport=polling&t=MgH7b2_ HTTP/1.1" 200 -
+teacher connection to url http://127.0.0.1:5000/teacher/Mendes/CSC351/A/0/29009914090627776462279945292371583475
+0 people in the class /Mendes/CSC351/A/0
+127.0.0.1 - - [07/May/2019 03:07:24] "POST /socket.io/?EIO=3&transport=polling&t=MgH7b3M&sid=733aef22e3214800a726874ac2560dd6 HTTP/1.1" 200 -
+a teacher posed a question
+{'question': 'this'}
+127.0.0.1 - - [07/May/2019 03:07:26] "POST /socket.io/?EIO=3&transport=polling&t=MgH7beI&sid=733aef22e3214800a726874ac2560dd6 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:07:26] "GET /socket.io/?EIO=3&transport=polling&t=MgH7b3Q&sid=733aef22e3214800a726874ac2560dd6 HTTP/1.1" 200 -
+student
+127.0.0.1 - - [07/May/2019 03:07:30] "POST / HTTP/1.1" 302 -
+127.0.0.1 - - [07/May/2019 03:07:30] "GET /student/Mendes/CSC351/A/1 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:07:31] "GET /socket.io/?EIO=3&transport=polling&t=MgH7cj1 HTTP/1.1" 200 -
+student connection to url http://127.0.0.1:5000/student/Mendes/CSC351/A/1
+message handler error
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/engineio/server.py", line 505, in _trigger_event
+    return self.handlers[event](*args)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/socketio/server.py", line 590, in _handle_eio_message
+    self._handle_event(sid, pkt.namespace, pkt.id, pkt.data)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/socketio/server.py", line 526, in _handle_event
+    self._handle_event_internal(self, sid, data, namespace, id)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/socketio/server.py", line 529, in _handle_event_internal
+    r = server._trigger_event(data[0], namespace, sid, *data[1:])
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/socketio/server.py", line 558, in _trigger_event
+    return self.handlers[namespace][event](*args)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/flask_socketio/__init__.py", line 259, in _handler
+    *args)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/flask_socketio/__init__.py", line 660, in _handle_event
+    ret = handler(*args)
+  File "/Users/conorhuh/Desktop/Davidson/Spring 2019/CSC 3530 Database Systems/Final Project/Classroom-Participation-Interface/app.py", line 153, in student_connection
+    people[url].append(student)
+KeyError: '/Mendes/CSC351/A/1'
+127.0.0.1 - - [07/May/2019 03:07:31] "POST /socket.io/?EIO=3&transport=polling&t=MgH7cjw&sid=6eb616231955449581b42d539f46fa94 HTTP/1.1" 200 -
+received a student response: {'user_name': 'Conor', 'message': 'answer'}
+disconnect handler error
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/engineio/server.py", line 505, in _trigger_event
+    return self.handlers[event](*args)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/socketio/server.py", line 603, in _handle_eio_disconnect
+    self._handle_disconnect(sid, '/')
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/socketio/server.py", line 512, in _handle_disconnect
+    self._trigger_event('disconnect', '/', sid)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/socketio/server.py", line 558, in _trigger_event
+    return self.handlers[namespace][event](*args)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/flask_socketio/__init__.py", line 259, in _handler
+    *args)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/flask_socketio/__init__.py", line 660, in _handle_event
+    ret = handler(*args)
+  File "/Users/conorhuh/Desktop/Davidson/Spring 2019/CSC 3530 Database Systems/Final Project/Classroom-Participation-Interface/app.py", line 256, in disconnect
+    people[room].remove(user)
+KeyError: None
+127.0.0.1 - - [07/May/2019 03:07:45] "POST /socket.io/?EIO=3&transport=polling&t=MgH7g8N&sid=6eb616231955449581b42d539f46fa94 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:07:45] "GET /socket.io/?EIO=3&transport=polling&t=MgH7beb&sid=733aef22e3214800a726874ac2560dd6 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:07:45] "GET /socket.io/?EIO=3&transport=polling&t=MgH7UPR&sid=89c77c13ea6545859411ec35e9d506e3 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:07:45] "GET /socket.io/?EIO=3&transport=polling&t=MgH7cj_&sid=6eb616231955449581b42d539f46fa94 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:07:50] "POST /socket.io/?EIO=3&transport=polling&t=MgH7hQo&sid=733aef22e3214800a726874ac2560dd6 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:07:50] "GET /socket.io/?EIO=3&transport=polling&t=MgH7g8u&sid=733aef22e3214800a726874ac2560dd6 HTTP/1.1" 200 -
+received a student response: {'user_name': 'Conor', 'message': 'answer'}
+127.0.0.1 - - [07/May/2019 03:07:53] "POST /socket.io/?EIO=3&transport=polling&t=MgH7i6_&sid=6eb616231955449581b42d539f46fa94 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:07:53] "GET /socket.io/?EIO=3&transport=polling&t=MgH7hQy&sid=733aef22e3214800a726874ac2560dd6 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:07:53] "GET /socket.io/?EIO=3&transport=polling&t=MgH7g8t&sid=6eb616231955449581b42d539f46fa94 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:07:56] "POST /socket.io/?EIO=3&transport=polling&t=MgH7iq8&sid=6eb616231955449581b42d539f46fa94 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:07:56] "GET /socket.io/?EIO=3&transport=polling&t=MgH7i7G&sid=6eb616231955449581b42d539f46fa94 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:08:16] "POST /socket.io/?EIO=3&transport=polling&t=MgH7nn8&sid=733aef22e3214800a726874ac2560dd6 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:08:16] "GET /socket.io/?EIO=3&transport=polling&t=MgH7i7I&sid=733aef22e3214800a726874ac2560dd6 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:08:21] "POST /socket.io/?EIO=3&transport=polling&t=MgH7owx&sid=6eb616231955449581b42d539f46fa94 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:08:21] "GET /socket.io/?EIO=3&transport=polling&t=MgH7iqH&sid=6eb616231955449581b42d539f46fa94 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:08:46] "POST /socket.io/?EIO=3&transport=polling&t=MgH7v1k&sid=6eb616231955449581b42d539f46fa94 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:08:46] "GET /socket.io/?EIO=3&transport=polling&t=MgH7ox4&sid=6eb616231955449581b42d539f46fa94 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:08:52] "POST /socket.io/?EIO=3&transport=polling&t=MgH7wfA&sid=733aef22e3214800a726874ac2560dd6 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:08:52] "GET /socket.io/?EIO=3&transport=polling&t=MgH7nnF&sid=733aef22e3214800a726874ac2560dd6 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:08:59] "GET / HTTP/1.1" 200 -
+teacher
+127.0.0.1 - - [07/May/2019 03:09:03] "POST / HTTP/1.1" 302 -
+127.0.0.1 - - [07/May/2019 03:09:03] "GET /teacher/Mendes/CSC351/A/0/32120813927170194916600817846782927949 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:09:03] "GET /socket.io/?EIO=3&transport=polling&t=MgH7zNw HTTP/1.1" 200 -
+teacher connection to url http://127.0.0.1:5000/teacher/Mendes/CSC351/A/0/32120813927170194916600817846782927949
+0 people in the class /Mendes/CSC351/A/0
+127.0.0.1 - - [07/May/2019 03:09:03] "POST /socket.io/?EIO=3&transport=polling&t=MgH7zOG&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+a teacher posed a question
+{'question': 'This is a question'}
+127.0.0.1 - - [07/May/2019 03:09:08] "POST /socket.io/?EIO=3&transport=polling&t=MgH7-WQ&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:09:08] "GET /socket.io/?EIO=3&transport=polling&t=MgH7wfL&sid=733aef22e3214800a726874ac2560dd6 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:09:08] "GET /socket.io/?EIO=3&transport=polling&t=MgH7zOJ&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:09:17] "POST /socket.io/?EIO=3&transport=polling&t=MgH80l_&sid=733aef22e3214800a726874ac2560dd6 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:09:17] "GET /socket.io/?EIO=3&transport=polling&t=MgH7-Wg&sid=733aef22e3214800a726874ac2560dd6 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:09:20] "GET / HTTP/1.1" 200 -
+student
+127.0.0.1 - - [07/May/2019 03:09:22] "POST / HTTP/1.1" 302 -
+127.0.0.1 - - [07/May/2019 03:09:22] "GET /student/Mendes/CSC351/A/1 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:09:22] "GET /socket.io/?EIO=3&transport=polling&t=MgH81-7 HTTP/1.1" 200 -
+student connection to url http://127.0.0.1:5000/student/Mendes/CSC351/A/1
+message handler error
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/engineio/server.py", line 505, in _trigger_event
+    return self.handlers[event](*args)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/socketio/server.py", line 590, in _handle_eio_message
+    self._handle_event(sid, pkt.namespace, pkt.id, pkt.data)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/socketio/server.py", line 526, in _handle_event
+    self._handle_event_internal(self, sid, data, namespace, id)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/socketio/server.py", line 529, in _handle_event_internal
+    r = server._trigger_event(data[0], namespace, sid, *data[1:])
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/socketio/server.py", line 558, in _trigger_event
+    return self.handlers[namespace][event](*args)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/flask_socketio/__init__.py", line 259, in _handler
+    *args)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/flask_socketio/__init__.py", line 660, in _handle_event
+    ret = handler(*args)
+  File "/Users/conorhuh/Desktop/Davidson/Spring 2019/CSC 3530 Database Systems/Final Project/Classroom-Participation-Interface/app.py", line 153, in student_connection
+KeyError: '/Mendes/CSC351/A/1'
+127.0.0.1 - - [07/May/2019 03:09:22] "POST /socket.io/?EIO=3&transport=polling&t=MgH81-Y&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 200 -
+disconnect handler error
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/engineio/server.py", line 505, in _trigger_event
+    return self.handlers[event](*args)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/socketio/server.py", line 603, in _handle_eio_disconnect
+    self._handle_disconnect(sid, '/')
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/socketio/server.py", line 512, in _handle_disconnect
+    self._trigger_event('disconnect', '/', sid)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/socketio/server.py", line 558, in _trigger_event
+    return self.handlers[namespace][event](*args)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/flask_socketio/__init__.py", line 259, in _handler
+    *args)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/flask_socketio/__init__.py", line 660, in _handle_event
+    ret = handler(*args)
+  File "/Users/conorhuh/Desktop/Davidson/Spring 2019/CSC 3530 Database Systems/Final Project/Classroom-Participation-Interface/app.py", line 256, in disconnect
+    people[room].remove(user)
+KeyError: None
+127.0.0.1 - - [07/May/2019 03:09:26] "GET /socket.io/?EIO=3&transport=polling&t=MgH7v1t&sid=6eb616231955449581b42d539f46fa94 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:09:29] "POST /socket.io/?EIO=3&transport=polling&t=MgH83j5&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:09:29] "GET /socket.io/?EIO=3&transport=polling&t=MgH7-Wj&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+received a student response: {'user_name': 'Conor', 'message': 'new answer'}
+127.0.0.1 - - [07/May/2019 03:09:30] "POST /socket.io/?EIO=3&transport=polling&t=MgH83uG&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:09:30] "GET /socket.io/?EIO=3&transport=polling&t=MgH80m8&sid=733aef22e3214800a726874ac2560dd6 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:09:30] "GET /socket.io/?EIO=3&transport=polling&t=MgH83jE&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:09:30] "GET /socket.io/?EIO=3&transport=polling&t=MgH81-a&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:09:50] "POST /socket.io/?EIO=3&transport=polling&t=MgH88s9&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:09:50] "GET /socket.io/?EIO=3&transport=polling&t=MgH83uZ&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:09:54] "POST /socket.io/?EIO=3&transport=polling&t=MgH89pu&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:09:54] "GET /socket.io/?EIO=3&transport=polling&t=MgH83uZ&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+disconnect handler error
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/engineio/server.py", line 505, in _trigger_event
+    return self.handlers[event](*args)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/socketio/server.py", line 603, in _handle_eio_disconnect
+    self._handle_disconnect(sid, '/')
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/socketio/server.py", line 512, in _handle_disconnect
+    self._trigger_event('disconnect', '/', sid)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/socketio/server.py", line 558, in _trigger_event
+    return self.handlers[namespace][event](*args)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/flask_socketio/__init__.py", line 259, in _handler
+    *args)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/flask_socketio/__init__.py", line 660, in _handle_event
+    ret = handler(*args)
+  File "/Users/conorhuh/Desktop/Davidson/Spring 2019/CSC 3530 Database Systems/Final Project/Classroom-Participation-Interface/app.py", line 256, in disconnect
+    people[room].remove(user)
+ValueError: list.remove(x): x not in list
+127.0.0.1 - - [07/May/2019 03:10:19] "POST /socket.io/?EIO=3&transport=polling&t=MgH8Fwe&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:10:19] "GET /socket.io/?EIO=3&transport=polling&t=MgH89p_&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:10:24] "POST /socket.io/?EIO=3&transport=polling&t=MgH8HB0&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:10:24] "GET /socket.io/?EIO=3&transport=polling&t=MgH88sJ&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:10:44] "POST /socket.io/?EIO=3&transport=polling&t=MgH8M1V&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:10:44] "GET /socket.io/?EIO=3&transport=polling&t=MgH8Fwq&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:11:01] "POST /socket.io/?EIO=3&transport=polling&t=MgH8Q9g&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:11:01] "GET /socket.io/?EIO=3&transport=polling&t=MgH8HBF&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:11:09] "POST /socket.io/?EIO=3&transport=polling&t=MgH8S8H&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:11:09] "GET /socket.io/?EIO=3&transport=polling&t=MgH8M1d&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:11:29] "POST /socket.io/?EIO=3&transport=polling&t=MgH8WzT&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:11:29] "GET /socket.io/?EIO=3&transport=polling&t=MgH8Q9o&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:11:34] "POST /socket.io/?EIO=3&transport=polling&t=MgH8YF5&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:11:34] "GET /socket.io/?EIO=3&transport=polling&t=MgH8S8Q&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:11:59] "POST /socket.io/?EIO=3&transport=polling&t=MgH8eLt&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:11:59] "GET /socket.io/?EIO=3&transport=polling&t=MgH8YFD&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:12:06] "POST /socket.io/?EIO=3&transport=polling&t=MgH8f_u&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:12:06] "GET /socket.io/?EIO=3&transport=polling&t=MgH8Wzj&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:12:24] "POST /socket.io/?EIO=3&transport=polling&t=MgH8kSi&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:12:24] "GET /socket.io/?EIO=3&transport=polling&t=MgH8eM2&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:12:32] "POST /socket.io/?EIO=3&transport=polling&t=MgH8mHh&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:12:32] "GET /socket.io/?EIO=3&transport=polling&t=MgH8g00&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:12:49] "POST /socket.io/?EIO=3&transport=polling&t=MgH8qZW&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:12:49] "GET /socket.io/?EIO=3&transport=polling&t=MgH8kSs&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:13:10] "POST /socket.io/?EIO=3&transport=polling&t=MgH8vWh&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:13:10] "GET /socket.io/?EIO=3&transport=polling&t=MgH8mHo&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:13:14] "POST /socket.io/?EIO=3&transport=polling&t=MgH8wgI&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:13:14] "GET /socket.io/?EIO=3&transport=polling&t=MgH8qZf&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:13:39] "POST /socket.io/?EIO=3&transport=polling&t=MgH90n4&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:13:39] "GET /socket.io/?EIO=3&transport=polling&t=MgH8wgR&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:13:46] "POST /socket.io/?EIO=3&transport=polling&t=MgH92Rb&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:13:46] "GET /socket.io/?EIO=3&transport=polling&t=MgH8vWp&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:14:04] "POST /socket.io/?EIO=3&transport=polling&t=MgH96tv&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:14:04] "GET /socket.io/?EIO=3&transport=polling&t=MgH90nG&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:14:12] "POST /socket.io/?EIO=3&transport=polling&t=MgH98ho&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:14:12] "GET /socket.io/?EIO=3&transport=polling&t=MgH92Rj&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:14:29] "POST /socket.io/?EIO=3&transport=polling&t=MgH9C-i&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:14:29] "GET /socket.io/?EIO=3&transport=polling&t=MgH96u2&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:14:40] "POST /socket.io/?EIO=3&transport=polling&t=MgH9FdT&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:14:40] "GET /socket.io/?EIO=3&transport=polling&t=MgH98hx&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:14:54] "POST /socket.io/?EIO=3&transport=polling&t=MgH9J5V&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:14:54] "GET /socket.io/?EIO=3&transport=polling&t=MgH9C-r&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:15:07] "POST /socket.io/?EIO=3&transport=polling&t=MgH9M6q&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:15:07] "GET /socket.io/?EIO=3&transport=polling&t=MgH9Fdb&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:15:19] "POST /socket.io/?EIO=3&transport=polling&t=MgH9PCH&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:15:19] "GET /socket.io/?EIO=3&transport=polling&t=MgH9J5d&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:15:38] "POST /socket.io/?EIO=3&transport=polling&t=MgH9Tlj&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:15:38] "GET /socket.io/?EIO=3&transport=polling&t=MgH9M7K&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:15:44] "POST /socket.io/?EIO=3&transport=polling&t=MgH9VJ2&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:15:44] "GET /socket.io/?EIO=3&transport=polling&t=MgH9PCO&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:16:09] "POST /socket.io/?EIO=3&transport=polling&t=MgH9bPq&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:16:09] "GET /socket.io/?EIO=3&transport=polling&t=MgH9VJA&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:16:16] "POST /socket.io/?EIO=3&transport=polling&t=MgH9cv3&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:16:16] "GET /socket.io/?EIO=3&transport=polling&t=MgH9Tlr&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:16:34] "POST /socket.io/?EIO=3&transport=polling&t=MgH9hWd&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:16:34] "GET /socket.io/?EIO=3&transport=polling&t=MgH9bPy&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:16:52] "POST /socket.io/?EIO=3&transport=polling&t=MgH9ltO&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:16:52] "GET /socket.io/?EIO=3&transport=polling&t=MgH9cvC&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:16:59] "POST /socket.io/?EIO=3&transport=polling&t=MgH9ndO&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:16:59] "GET /socket.io/?EIO=3&transport=polling&t=MgH9hWl&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:17:25] "POST /socket.io/?EIO=3&transport=polling&t=MgH9tkC&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:17:25] "GET /socket.io/?EIO=3&transport=polling&t=MgH9ndZ&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:17:25] "POST /socket.io/?EIO=3&transport=polling&t=MgH9tqp&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:17:25] "GET /socket.io/?EIO=3&transport=polling&t=MgH9ltV&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:17:50] "POST /socket.io/?EIO=3&transport=polling&t=MgH9zq-&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:17:50] "GET /socket.io/?EIO=3&transport=polling&t=MgH9tkL&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:18:02] "POST /socket.io/?EIO=3&transport=polling&t=MgHA0xv&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:18:02] "GET /socket.io/?EIO=3&transport=polling&t=MgH9tqy&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:18:15] "POST /socket.io/?EIO=3&transport=polling&t=MgHA3xl&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:18:15] "GET /socket.io/?EIO=3&transport=polling&t=MgH9zr5&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+disconnect handler error
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/engineio/server.py", line 505, in _trigger_event
+    return self.handlers[event](*args)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/socketio/server.py", line 603, in _handle_eio_disconnect
+    self._handle_disconnect(sid, '/')
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/socketio/server.py", line 512, in _handle_disconnect
+    self._trigger_event('disconnect', '/', sid)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/socketio/server.py", line 558, in _trigger_event
+    return self.handlers[namespace][event](*args)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/flask_socketio/__init__.py", line 259, in _handler
+    *args)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/flask_socketio/__init__.py", line 660, in _handle_event
+    ret = handler(*args)
+  File "/Users/conorhuh/Desktop/Davidson/Spring 2019/CSC 3530 Database Systems/Final Project/Classroom-Participation-Interface/app.py", line 256, in disconnect
+    currentMeeting = Meetings.find_one(query = ids)
+KeyError: None
+127.0.0.1 - - [07/May/2019 03:18:37] "GET /socket.io/?EIO=3&transport=polling&t=MgHA0y6&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:18:37] "POST /socket.io/?EIO=3&transport=polling&t=MgHA9Jm&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 400 -
+127.0.0.1 - - [07/May/2019 03:18:37] "GET /socket.io/?EIO=3&transport=polling&t=MgHA9Jn&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 400 -
+127.0.0.1 - - [07/May/2019 03:18:37] "POST /socket.io/?EIO=3&transport=polling&t=MgHA9PV&sid=8fd4ca33228f4cee97e3d8ce7015b873 HTTP/1.1" 400 -
+127.0.0.1 - - [07/May/2019 03:18:39] "GET /socket.io/?EIO=3&transport=polling&t=MgHA9uO HTTP/1.1" 200 -
+student connection to url http://127.0.0.1:5000/student/Mendes/CSC351/A/1
+message handler error
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/engineio/server.py", line 505, in _trigger_event
+    return self.handlers[event](*args)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/socketio/server.py", line 590, in _handle_eio_message
+    self._handle_event(sid, pkt.namespace, pkt.id, pkt.data)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/socketio/server.py", line 526, in _handle_event
+    self._handle_event_internal(self, sid, data, namespace, id)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/socketio/server.py", line 529, in _handle_event_internal
+    r = server._trigger_event(data[0], namespace, sid, *data[1:])
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/socketio/server.py", line 558, in _trigger_event
+    return self.handlers[namespace][event](*args)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/flask_socketio/__init__.py", line 259, in _handler
+    *args)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/flask_socketio/__init__.py", line 660, in _handle_event
+    ret = handler(*args)
+  File "/Users/conorhuh/Desktop/Davidson/Spring 2019/CSC 3530 Database Systems/Final Project/Classroom-Participation-Interface/app.py", line 153, in student_connection
+KeyError: '/Mendes/CSC351/A/1'
+127.0.0.1 - - [07/May/2019 03:18:39] "POST /socket.io/?EIO=3&transport=polling&t=MgHA9uW&sid=4f18aef166dd429a98a2fd826ac62cf6 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:18:40] "POST /socket.io/?EIO=3&transport=polling&t=MgHAA2W&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:18:40] "GET /socket.io/?EIO=3&transport=polling&t=MgHA3xs&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:19:05] "POST /socket.io/?EIO=3&transport=polling&t=MgHAG9K&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:19:05] "GET /socket.io/?EIO=3&transport=polling&t=MgHAA2g&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:19:08] "POST /socket.io/?EIO=3&transport=polling&t=MgHAGwm&sid=4f18aef166dd429a98a2fd826ac62cf6 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:19:08] "GET /socket.io/?EIO=3&transport=polling&t=MgHA9uX&sid=4f18aef166dd429a98a2fd826ac62cf6 HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:19:30] "POST /socket.io/?EIO=3&transport=polling&t=MgHAMG7&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:19:30] "GET /socket.io/?EIO=3&transport=polling&t=MgHAG9S&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:19:55] "POST /socket.io/?EIO=3&transport=polling&t=MgHASMv&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+127.0.0.1 - - [07/May/2019 03:19:55] "GET /socket.io/?EIO=3&transport=polling&t=MgHAMGF&sid=28fe109c241a4357b58b97bd3631316a HTTP/1.1" 200 -
+disconnect handler error
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/engineio/socket.py", line 31, in poll
+    packets = [self.queue.get(timeout=self.server.ping_timeout)]
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/queue.py", line 172, in get
+    raise Empty
+queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/engineio/socket.py", line 108, in handle_get_request
+    packets = self.poll()
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/engineio/socket.py", line 34, in poll
+    raise exceptions.QueueEmpty()
+engineio.exceptions.QueueEmpty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/engineio/server.py", line 505, in _trigger_event
+    return self.handlers[event](*args)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/socketio/server.py", line 603, in _handle_eio_disconnect
+    self._handle_disconnect(sid, '/')
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/socketio/server.py", line 512, in _handle_disconnect
+    self._trigger_event('disconnect', '/', sid)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/socketio/server.py", line 558, in _trigger_event
+    return self.handlers[namespace][event](*args)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/flask_socketio/__init__.py", line 259, in _handler
+    *args)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/flask_socketio/__init__.py", line 660, in _handle_event
+    ret = handler(*args)
+  File "/Users/conorhuh/Desktop/Davidson/Spring 2019/CSC 3530 Database Systems/Final Project/Classroom-Participation-Interface/app.py", line 256, in disconnect
+KeyError: None
