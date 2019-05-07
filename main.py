@@ -3,7 +3,6 @@ from flask import Flask, render_template, redirect, url_for, request
 from flask_socketio import SocketIO, join_room, leave_room
 from random import getrandbits
 
-
 """
 TODO:
     Create a way to input all the respones from a certain class --> database call, then put into {{}}

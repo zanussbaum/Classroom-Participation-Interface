@@ -26,9 +26,11 @@
               <div class="form-group">
                 <label for="exampleInputEmail1">Class</label>
                 <select class="form-control" name="course">
-                  {%if courses}
+                  {%if courses%}
                     {%for course in courses%}
-                      
+                    <option>{{course}}</option>
+                    {%endfor%}
+                  {%endif%}
                     <option value="CSC351">Database</option>
                     <option value="CSC370">Machine Reasoning</option>
                   </select>
