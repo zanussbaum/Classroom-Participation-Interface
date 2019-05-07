@@ -8,6 +8,7 @@ MONGO_DATABASE = "VirtualClassroom"
 MONGO_CLIENT = client = MongoClient(MONGO_HOST,MONGO_PORT)
 
 def get_database() -> 'pymongo.database.Database':
+    MONGO_CLIENT.drop_database(MONGO_DATABASE)
     return MONGO_CLIENT.get_database(MONGO_DATABASE)
 
 class Teacher:
@@ -18,6 +19,11 @@ class Teacher:
             self.id = None
         else:
             self.id = data['_id']
+
+    def __str__(self):
+        return self.name
+    def __repr__(self):
+        return self.__str__()
 
     def getName(self):
         return self.name
@@ -78,7 +84,7 @@ class Question:
             self.responses[data['user_name']] = data['message']
             
     def to_dict(self):
-        _return = dict(question=self.question, responses = self.responses, number = self.number)
+        _return = dict({"question":self.question, "responses":self.responses, "number":self.number})
         # _return['responses'] = self.responses
         return _return if self.id is None else _return.update({"_id": self.id})
     
@@ -121,6 +127,13 @@ class Course_Section(Teacher):
         else:
             self.id = data['_id']
 
+    def __str__(self):
+        str = self.course + " " + self.section + " " + self.teacher.__str__()
+        return str
+
+    def __repr__(self):
+        return self.__str__()
+
     def returnCourseSectionDetails(self):
         temp = "Course Sections Details: " + "\nProfessor: " + self.teacher.getName() + "\nCourse: " + self.course + "\nSection: " + self.section 
         return temp
@@ -138,7 +151,7 @@ class Course_Section(Teacher):
         return self.id
 
     def to_dict(self):
-        _return = dict(course= self.course, section = self.section, teacher = self.teacher.to_dict())
+        _return = dict({"courses":self.course, "section":self.section, "teacher":self.teacher.to_dict()})
         return _return if self.id is None else _return.update({'_id': self.id})
 
 class _Course_Sections(Course_Section,Teacher):
@@ -146,6 +159,13 @@ class _Course_Sections(Course_Section,Teacher):
         self.db = get_database()
         self.collection = self.db['course_sections']
 
+    def find(self, element=None):
+        collection = self.collection
+        if element is None:
+            return collection.find({}, {"_id":0}).sort([("course",1)])
+        else:
+            return collection.find(element)
+        
     def insert_one(self, course_section : 'Course_Section') -> 'bson.ObjectId':
         obj_id = self.collection.insert_one(course_section.to_dict())
         course_section.id = obj_id.inserted_id
@@ -205,7 +225,7 @@ class Course_Section_Meeting(Course_Section, Question, Teacher):
         return self.course_section
 
     def to_dict(self):
-        _return = dict(questions= self.questions, date = self.date, course_section = self.course_section.to_dict(), session_number = self.session_number)
+        _return = dict({"questions":self.questions, "date":self.date, "course_section":self.course_section.to_dict(), "session_number":self.session_number})
         return _return if self.id is None else _return.update({"_id" : self.id})
 
 class _Course_Section_Meetings(Course_Section, Question, Teacher):
