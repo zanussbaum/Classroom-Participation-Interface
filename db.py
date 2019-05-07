@@ -153,7 +153,7 @@ class _Course_Sections(Course_Section,Teacher):
                 return i
 
     def setClassNumber(self, teacher, course, section):
-        class_number =0
+        class_number = 0
 
         for i in self.collection.find():
             if course == i['course']:

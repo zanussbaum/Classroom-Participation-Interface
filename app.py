@@ -10,7 +10,6 @@ Known Constraints:
     Teacher must log in before student
     Teacher must pose a question before any student submits a response
     Student responses will only be logged to the most recent question posed
-
 """
 
 """
@@ -18,13 +17,12 @@ TODO:
     Create a way to input all the responses from a certain class --> database call, then put into {{}}
         in html  
 
-    Make UI look better lol --> ask if this is necessary 
-
     On teacher disconnect, the course meeting must be inserted into the our Meetings relation
 
     Fix KeyError bugs, Disconnect Handler Errors, Message Handler Error. Terminal logs for my session are 
     included into the 'terminaldebuglog.txt' file
 """
+
 app = Flask(__name__)
 socketio = SocketIO(app)
 
@@ -42,11 +40,11 @@ def about():
 def home():
     if request.method == 'POST':
         #may want to assert that prof name and student names are all lowercase to reduce duplicate entries into the db
-        teacher = request.form['teacherName']
+        teacher = request.form['teacherName'].lower()
         course = request.form.get('course')
         section = request.form.get('section')
         person = request.form.get('person')
-        print(person)
+        
 
         #this is where we would make a database call to see class number
         class_number = 1
@@ -213,6 +211,8 @@ def student_response(json, methods=['GET', 'POST']):
     #can parse json here to store into database
     print('received a student response: ' + str(json))
 
+    url = strip_url(json['url'],True)
+
     current_Question : 'Question'
     current_Question = Questions.getOneQuestion(query = ids)
 
@@ -235,6 +235,8 @@ def student_response(json, methods=['GET', 'POST']):
 def teacher_question(json, methods=['GET', 'POST']):
     print('a teacher posed a question')
 
+    url = strip_url(json['url'], False)
+
     #can parse json here to put into database   
     print(json)
     
@@ -247,6 +249,7 @@ def teacher_question(json, methods=['GET', 'POST']):
         print(str(ex))
 
     #questions is simply a list to keep track of the number of questions we have, it is a flask work around
+    global questions
     questions.append(1)
 
     #set the question number for this session
@@ -291,9 +294,12 @@ def disconnect():
 
     room = which_room.get(user)
 
-    leave_room(room)
-
-    people[room].remove(user)
+    try:
+        leave_room(room)
+        people[room].remove(user)
+    except ValueError:
+        print("not in room")
+        pass
 
     print("there are now %d users in %s" %(len(people[room]), room))
 

@@ -68,7 +68,8 @@
           console.log($( 'form' ))
           let question = $( 'input.question' ).val()
           socket.emit( 'teacher question', {
-            question: question
+            question: question,
+            url:document.URL
           } )
           $( 'input.question' ).val( '' ).focus()
         } )

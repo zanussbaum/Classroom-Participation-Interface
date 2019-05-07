@@ -47,7 +47,8 @@
           let user_input = $( 'input.message' ).val()
           socket.emit( 'student response', {
             user_name : user_name,
-            message : user_input
+            message : user_input,
+            url: document.URL
           } )
           $( 'input.message' ).val( '' ).focus()
         } )
