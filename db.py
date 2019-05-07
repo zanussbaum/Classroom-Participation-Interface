@@ -220,6 +220,7 @@ class _Course_Section_Meetings(Course_Section, Question, Teacher):
     def findByProfessor(self, teacher: 'Teacher'):
         for i in self.collection.find():
             if i.course_section.professor_data == teacher:
+                # socket.send(i)
                 return i
    
     def getNumSessions(self, section: 'Course_Section'):
