@@ -15,14 +15,15 @@ Known Constraints:
 
 """
 TODO:
-    Create a way to input all the respones from a certain class --> database call, then put into {{}}
+    Create a way to input all the responses from a certain class --> database call, then put into {{}}
         in html  
 
     Make UI look better lol --> ask if this is necessary 
 
     On teacher disconnect, the course meeting must be inserted into the our Meetings relation
 
-    Fix KeyError bugs, Disconnect Handler Errors, Message Handler Error
+    Fix KeyError bugs, Disconnect Handler Errors, Message Handler Error. Terminal logs for my session are 
+    included into the 'terminaldebuglog.txt' file
 """
 app = Flask(__name__)
 socketio = SocketIO(app)
