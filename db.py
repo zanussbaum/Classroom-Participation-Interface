@@ -106,11 +106,14 @@ class _Questions(Question):
 # Dict key 'teacher' here must be a teacher object 
 class Course_Section(Teacher):
     def __init__(self, data: dict, teacher: 'Teacher'):
+        #course "CSC353"
         self.course = data['course']
+        #Section A
         self.section = data['section']
         
         #self.class_number = data['class_number']
         
+        #Teacher object
         self.teacher = teacher
 
         if data['_id'] is None:
@@ -149,8 +152,8 @@ class _Course_Sections(Course_Section,Teacher):
     
     def getCourseByProfessor(self, teacher: 'Teacher') -> 'Course_Section':
         for i in self.collection.find():
-            if i.professor_data.getName() == teacher.getName():
-                return i
+            if i['professor_data'].getName() == teacher.getName():
+                return i.getId()
 
     def setClassNumber(self, teacher, course, section):
         class_number = 1
