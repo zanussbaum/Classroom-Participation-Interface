@@ -198,6 +198,9 @@ class Course_Section_Meeting(Course_Section, Question, Teacher):
     def getId(self):
         return self.id
 
+    def getCourseSection(self):
+        return self.course_section
+
     def to_dict(self):
         _return = dict(questions= self.questions, date = self.date, course_section = self.course_section.to_dict(), session_number = self.session_number)
         return _return if self.id is None else _return.update({"_id" : self.id})
@@ -220,13 +223,12 @@ class _Course_Section_Meetings(Course_Section, Question, Teacher):
     def findByProfessor(self, teacher: 'Teacher'):
         for i in self.collection.find():
             if i.course_section.professor_data == teacher:
-                # socket.send(i)
                 return i
    
     def getNumSessions(self, section: 'Course_Section'):
         number = 0
         for i in self.collection.find():
-            if section == i:
+            if section == i['course_section_meeting'].getCourseSection():
                 number += 1
         return number
 

@@ -112,6 +112,8 @@ def home():
                 newMeeting.setSessionNumber(number = class_number)
             except Exception as ex:
                 print(str(ex))
+
+            #insert the new meeting into Meetings
             try:
                 Meetings.insert_one(course_section_meeting=newMeeting)
             except Exception as ex:
@@ -257,7 +259,6 @@ def teacher_question(json, methods=['GET', 'POST']):
     """
     try:
         Questions.insert_one(question=newQuestion)
-        
         ids['question'] = newQuestion.getQuestionId()
     except Exception as ex:
         print("Question Insertion")
