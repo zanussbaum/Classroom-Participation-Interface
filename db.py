@@ -265,14 +265,13 @@ class _Course_Section_Meetings():
         self.db = get_database()
         self.collection = self.db['course_section_meetings']
     
-    def insert_one(self, course_section_meeting: 'Course_Section_Meeting'):
+    def insert_one(self, course_section_meeting):
         obj_id = self.collection.insert_one(course_section_meeting.to_dict())
         course_section_meeting.id = obj_id.inserted_id
-        return course_section_meeting
 
     def find_one(self, data: dict):
-        item = self.collection.find_one(data)
-        return Course_Section_Meeting(item)
+        return self.collection.find_one(data)
+
 
         
     def find_all_meetings(self, section: 'Course_Section_Meeting'):
@@ -301,12 +300,20 @@ class _Course_Section_Meetings():
 
     def insert_and_update(self, question, object_id):
         if self.collection.find_one({"_id" : object_id}) is not None:
-            old_questions = self.collection.find_one({"_id" : object_id})['questions']
+            course_meeting = self.collection.find_one({"_id" : object_id})
+            old_questions = course_meeting['questions']
             if old_questions is not None:
-                old_questions.append(question)
+                if len(old_questions) == course_meeting['session_number'] - 1:
+                    old_questions.append([question])
+                else:
+                    old_questions[course_meeting['session_number']-1].append(question)
                 self.collection.update_one({"_id":object_id}, {"$set": {"questions":old_questions}})
             else:
-                self.collection.update_one({"_id":object_id}, {"$set": {"questions":[question]}})
+                self.collection.update_one({"_id":object_id}, {"$set": {"questions":[[question]]}})
+
+    def insert_and_increment(self, object_id):
+        if self.collection.find_one({"_id" : object_id}) is not None:
+            self.collection.update_one({"_id":object_id},{"$inc": {"session_number":1}})
 
                 
 Teachers = _Teachers()

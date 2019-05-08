@@ -13,23 +13,33 @@
           <div class="card-header">
             <a href="/" class="btn btn-outline-primary">Home</a>
           </div>
+          {% if questions}
+          <div class="card-body">
+            {%for question in questions%}
+            <p>{{question.question + question.responses}}</p>
+            {%endfor%}
+          </div>
+        
           <div class="card-body">
             <h3 style='color: #ccc;font-size: 30px;'>No responses yet..</h3>
-          <div class="message_holder"></div>
-          {% if sessions %}
-          <form method="POST" name="previous-sessions">
-              <div class="form-group">
-                  <label for="exampleInputEmail1">Previous-sessions</label>
-                  <select class="form-control" name="session">
-                      {% for number in session %}
-                      <option> {{number}}</option>
-                      {%endfor%}
-                  </select>
-              </div>
-              <button type="submit" class="btn btn-outline-primary">Get Previous Sessions</button>
-          </form>
+          <div class="message_holder">
+          {%else%}
+            {% if session %}
+            <form method="POST" name="previous-sessions">
+                <div class="form-group">
+                    <label>Previous-sessions</label>
+                    <select class="form-control" name="session">
+                        {% for number in session %}
+                        <option> {{number}}</option>
+                        {%endfor%}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-outline-primary">Get Previous Sessions</button>
+            </form>
+            {%endif%}
+          </div>
           {%endif%}
-          
+          <div class="message_holder">
           <form method="POST" name="form">
             <div class="form-group">
                 <label for="exampleInputEmail1">Question</label>
@@ -39,20 +49,6 @@
           </form>
           </div>
         </div>
-      <!--
-        may not need this part
-
-        <div class="previous-message">
-      {% if data %}
-        <ul>
-          {%for response in data %}
-          <li>{{response}}</li>
-          {%endfor%}
-        </ul>
-        {%endif%}
-    </div>
-      -->
-    
   </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
@@ -63,7 +59,7 @@
           data: 'User Connected',
           url: document.URL
         } )
-        var form = $( 'form' ).on( 'submit', function( e ) {
+        var form = $( 'form[name=form]' ).on( 'submit', function( e ) {
           e.preventDefault()
           console.log($( 'form' ))
           let question = $( 'input.question' ).val()
@@ -74,6 +70,17 @@
           $( 'input.question' ).val( '' ).focus()
         } )
       } )
+
+      var question = $('form[name=previous-sessions]').on('submit', function(e){
+        e.preventDefault()
+        console.log($('form[name=previous-sessions]'))
+        console.log($('select[name=session]'))
+        let sessionNumber = $('select[name=session]').val()
+        socket.emit('session request', {
+          session: sessionNumber,
+          url: document.URL
+        })
+      })
       socket.on( 'student response', function( msg ) {
         console.log( msg )
         if( typeof msg.user_name !== 'undefined' ) {

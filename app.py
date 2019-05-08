@@ -6,21 +6,11 @@ from random import getrandbits
 from db import Teachers, Teacher, Questions, Question, Sections, Course_Section, Course_Section_Meeting, Meetings
 
 """
-Known Constraints:
-    Teacher must log in before student
-    Teacher must pose a question before any student submits a response
-    Student responses will only be logged to the most recent question posed
-"""
-
-"""
 TODO:
     Create a way to input all the responses from a certain class --> database call, then put into {{}}
         in html  
 
     On teacher disconnect, the course meeting must be inserted into the our Meetings relation
-
-    Fix KeyError bugs, Disconnect Handler Errors, Message Handler Error. Terminal logs for my session are 
-    included into the 'terminaldebuglog.txt' file
 """
 
 app = Flask(__name__)
@@ -48,23 +38,19 @@ def home():
         section = course_tuple[1]
         teacher = course_tuple[2]
 
+        #Grab the teacher object based off the name of the teacher
+        current_teacher = Teachers.find_one({"name" : teacher})
         
+        #Grab the Section object based off the department, course, section, name and the teacher object
+        try:
+            current_section = Sections.find_one(query={"course": course, "section": section, "teacher_name" : teacher})
+        except Exception as ex:
+            print("current_section")
+            print(str(ex))
 
-        #this is where we would make a database call to see class number
-        class_number = 1
+        class_number = Meetings.find_all_meetings(section  = current_section)
+
         if person == 'teacher':
-            #Grab the teacher object based off the name of the teacher
-            current_teacher = Teachers.find_one({"name" : teacher})
-            
-            #Grab the Section object based off the department, course, section, name and the teacher object
-            try:
-                current_section = Sections.find_one(query={"course": course, "section": section, "teacher_name" : teacher})
-            except Exception as ex:
-                print("current_section")
-                print(str(ex))
-
-            class_number = Meetings.find_all_meetings(section  = current_section)
-
             #Create a new meeting object, and set the class number to be the number we just calculated
             try:
                 current_meeting = Course_Section_Meeting({'session_number': class_number, 'course_section': current_section})
@@ -74,21 +60,20 @@ def home():
 
             #Insert the new meeting into our Meetings Table
             try:
-                Meetings.insert_one(current_meeting)
                 hash = getrandbits(128)
                 url = strip_url(url_for('teacher', teacher=teacher, course=course, section=section, class_number=class_number, hash=hash),False)
-                meeting_id[url] = current_meeting.id
+                if url in meeting_id:
+                    Meetings.insert_and_increment(meeting_id[url])
+                else:
+                    Meetings.insert_one(current_meeting)
+                    meeting_id[url] = current_meeting.id
 
             except Exception as ex:
                 print("Meetings insertion")
                 print(str(ex))
 
-            #Grab the object id for future use
-            # question_id['meeting'] = current_meeting.getId()
-
-        if person == 'teacher':
-            
             return redirect(url_for('teacher', teacher=teacher, course=course, section=section, class_number=class_number, hash=hash))
+
         else:
             return redirect(url_for('student', teacher=teacher, course=course, section=section, class_number=class_number))
     courses = Sections.find()
@@ -106,10 +91,11 @@ def student(teacher, course, section, class_number):
     Returns:
         render_template('student.html'): renders the template for new session 
     """
+    
     return render_template('student.html')
 
 @app.route('/teacher/<teacher>/<course>/<section>/<class_number>/<hash>')
-def teacher(teacher,course, section, class_number, hash, methods=['GET', 'POST']):
+def teacher(teacher,course, section, class_number, hash, questions,methods=['GET', 'POST']):
     """Webpage routine for a teacher in a certain class on a certain day 
 
     Parameters:
@@ -121,8 +107,11 @@ def teacher(teacher,course, section, class_number, hash, methods=['GET', 'POST']
     Returns:
         render_template('teacher.html'): renders the template for new session
     """
+    url = "teacher" + "/" + teacher + "/" + course + "/" + section + "/" + class_number
+    previous_sessions = Meetings.find_one({"_id":meeting_id[url]})
+    session = [s + 1 for s in range(previous_sessions['session_number']-1)]
     
-    return render_template('teacher.html')
+    return render_template('teacher.html',session=session,questions=questions)
 
 
 def strip_url(json, is_student):
@@ -219,15 +208,6 @@ def teacher_question(json, methods=['GET', 'POST']):
         print("question formation")
         print(str(ex))
 
-    #questions is simply a list to keep track of the number of questions we have, it is a flask work around
-    
-    
-
-    #set the question number for this session
-    
-
-    #finding the object id's for teacher
-
     try:
         thisTeacher = Teachers.find_one({'name': url_list[1]})
         
@@ -259,7 +239,6 @@ def teacher_question(json, methods=['GET', 'POST']):
         print(str(ex))
     
     try:
-        currentMeeting.addQuestion(question = newQuestion)
         Meetings.insert_and_update(question_id[url], meeting_id[url])
     except Exception as ex:
         print("add question to meeting")
@@ -269,7 +248,20 @@ def teacher_question(json, methods=['GET', 'POST']):
 
     socketio.emit('teacher question', json, callback=questionPosed,room=room)
 
+@socketio.on('session request')
+def session_request(json):
+    url = strip_url(json['url'],False)
+    session_number = json['session']
 
+    if url in meeting_id:
+        meeting = Meetings.find_one({"_id": meeting_id[url]})
+        questions = []
+        for id in meeting['questions'][int(session_number)-1]:
+            this_question = Questions.getOneQuestion(id)
+            questions.append(this_question)
+
+    redirect(json['url'],questions=questions)
+        
 
 @socketio.on('disconnect')
 def disconnect():
