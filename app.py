@@ -39,11 +39,15 @@ def about():
 @app.route('/', methods=['GET', 'POST'])
 def home():
     if request.method == 'POST':
-        #may want to assert that prof name and student names are all lowercase to reduce duplicate entries into the db
-        teacher = request.form['teacherName'].lower()
-        course = request.form.get('course')
-        section = request.form.get('section')
-        person = request.form.get('person')
+        course_tuple = request.form['course'].split(" ")
+        print(course_tuple)
+
+        person = request.form['person']
+        course = course_tuple[0]
+        section = course_tuple[1]
+        teacher = course_tuple[2]
+
+        
 
         #this is where we would make a database call to see class number
         class_number = 1
@@ -111,7 +115,8 @@ def home():
         else:
             return redirect(url_for('student', teacher=teacher, course=course, section=section, class_number=class_number))
     
-    return render_template('home.html')
+    courses = Sections.find()
+    return render_template('home.html',courses=courses)
     
 @app.route('/student/<teacher>/<course>/<section>/<class_number>')
 def student(teacher, course, section, class_number):
