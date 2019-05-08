@@ -13,21 +13,13 @@
           <div class="card-header">
             <a href="/" class="btn btn-outline-primary">Home</a>
           </div>
-          {% if questions}
-          <div class="card-body">
-            {%for question in questions%}
-            <p>{{question.question + question.responses}}</p>
-            {%endfor%}
+          <div class="question-holder">
+            <h3></h3>
           </div>
-        
-          <div class="card-body">
-            <h3 style='color: #ccc;font-size: 30px;'>No responses yet..</h3>
-          <div class="message_holder">
-          {%else%}
             {% if session %}
             <form method="POST" name="previous-sessions">
                 <div class="form-group">
-                    <label>Previous-sessions</label>
+                    <label>Previous Sessions</label>
                     <select class="form-control" name="session">
                         {% for number in session %}
                         <option> {{number}}</option>
@@ -38,8 +30,14 @@
             </form>
             {%endif%}
           </div>
-          {%endif%}
-          <div class="message_holder">
+      </div>
+      <div class="container-fluid">
+      <div class="card">
+          <div class="card-body">
+              <h3 style='color: #ccc;font-size: 30px;'>No responses yet..</h3>
+            <div class="message_holder"></div>
+          </div>
+          <div class="question_asker">
           <form method="POST" name="form">
             <div class="form-group">
                 <label for="exampleInputEmail1">Question</label>
@@ -49,10 +47,12 @@
           </form>
           </div>
         </div>
+      </div>
+      
   </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
-    <script type="text/javascript">
+    <script>
       var socket = io.connect('http://' + document.domain + ':' + location.port);
       socket.on( 'connect', function() {
         socket.emit( 'teacher connect', {
@@ -73,8 +73,6 @@
 
       var question = $('form[name=previous-sessions]').on('submit', function(e){
         e.preventDefault()
-        console.log($('form[name=previous-sessions]'))
-        console.log($('select[name=session]'))
         let sessionNumber = $('select[name=session]').val()
         socket.emit('session request', {
           session: sessionNumber,
@@ -88,6 +86,17 @@
           $( 'div.message_holder' ).append( '<div><b style="color: #000">'+msg.user_name+'</b> '+msg.message+'</div>' )
         }
       })
+
+      socket.on('questions' ,function(questions){
+        console.log(questions)
+        if( typeof questions !== 'undefined' ) {
+          for(var question of questions){
+            var obj = JSON.stringify(question.responses)
+            $( 'h3' ).remove()
+            $( 'div.question-holder' ).append( '<div class="question"><b style="color: #000">' + question.question+'</b>' +" " +obj + '</div>' )
+        }
+      }
+    })
     </script>
   </body>
   </html>

@@ -154,7 +154,7 @@ class Course_Section(Teacher):
         return self.__str__()
 
     def returnCourseSectionDetails(self):
-        temp = "Course Sections Details: " + "\nProfessor: " + self.teacher.getName() + "\nCourse: " + self.course + "\nSection: " + self.section 
+        temp = "Course Sections Details: " + "\nProfessor: " + self.teacher_name + "\nCourse: " + self.course + "\nSection: " + self.section 
         return temp
 
     def getCourse(self):

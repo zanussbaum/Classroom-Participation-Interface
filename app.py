@@ -21,7 +21,7 @@ people = {}
 which_room = {}
 question_id = {}
 meeting_id = {}
-questions = []
+questions_list = []
 
 @app.route('/about')
 def about():
@@ -95,7 +95,7 @@ def student(teacher, course, section, class_number):
     return render_template('student.html')
 
 @app.route('/teacher/<teacher>/<course>/<section>/<class_number>/<hash>')
-def teacher(teacher,course, section, class_number, hash, questions,methods=['GET', 'POST']):
+def teacher(teacher,course, section, class_number, hash,methods=['GET', 'POST']):
     """Webpage routine for a teacher in a certain class on a certain day 
 
     Parameters:
@@ -107,11 +107,13 @@ def teacher(teacher,course, section, class_number, hash, questions,methods=['GET
     Returns:
         render_template('teacher.html'): renders the template for new session
     """
+    if request.method == 'POST':
+        print(request)
     url = "teacher" + "/" + teacher + "/" + course + "/" + section + "/" + class_number
     previous_sessions = Meetings.find_one({"_id":meeting_id[url]})
     session = [s + 1 for s in range(previous_sessions['session_number']-1)]
     
-    return render_template('teacher.html',session=session,questions=questions)
+    return render_template('teacher.html',session=session)
 
 
 def strip_url(json, is_student):
@@ -202,8 +204,8 @@ def teacher_question(json, methods=['GET', 'POST']):
     #Try to create the new question, passing in the question text
     try:
         newQuestion = Question(json)
-        questions.append(1)
-        newQuestion.setQuestionNumber(counter = len(questions))
+        questions_list.append(1)
+        newQuestion.setQuestionNumber(counter = len(questions_list))
     except Exception as ex:
         print("question formation")
         print(str(ex))
@@ -258,9 +260,9 @@ def session_request(json):
         questions = []
         for id in meeting['questions'][int(session_number)-1]:
             this_question = Questions.getOneQuestion(id)
-            questions.append(this_question)
+            questions.append(this_question.to_dict())
 
-    redirect(json['url'],questions=questions)
+    socketio.emit('questions',questions,room=which_room.get(request.sid))
         
 
 @socketio.on('disconnect')
