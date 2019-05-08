@@ -30,6 +30,7 @@ socketio = SocketIO(app)
 people = {}
 which_room = {}
 question_id = {}
+meeting_id = {}
 questions = []
 
 @app.route('/about')
@@ -74,6 +75,10 @@ def home():
             #Insert the new meeting into our Meetings Table
             try:
                 Meetings.insert_one(current_meeting)
+                hash = getrandbits(128)
+                url = strip_url(url_for('teacher', teacher=teacher, course=course, section=section, class_number=class_number, hash=hash),False)
+                meeting_id[url] = current_meeting.id
+
             except Exception as ex:
                 print("Meetings insertion")
                 print(str(ex))
@@ -82,7 +87,7 @@ def home():
             # question_id['meeting'] = current_meeting.getId()
 
         if person == 'teacher':
-            hash = getrandbits(128)
+            
             return redirect(url_for('teacher', teacher=teacher, course=course, section=section, class_number=class_number, hash=hash))
         else:
             return redirect(url_for('student', teacher=teacher, course=course, section=section, class_number=class_number))
@@ -255,6 +260,7 @@ def teacher_question(json, methods=['GET', 'POST']):
     
     try:
         currentMeeting.addQuestion(question = newQuestion)
+        Meetings.insert_and_update(newQuestion, meeting_id[url])
     except Exception as ex:
         print("add question to meeting")
         print(str(ex))

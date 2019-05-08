@@ -99,9 +99,8 @@ class Question:
                 self.responses[data['user_name']] = data['message']
             
     def to_dict(self):
-        _return = dict({"question":self.question, "responses":self.responses, "number":self.number})
-        # _return['responses'] = self.responses
-        return _return if self.id is None else _return.update({"_id": self.id})
+        _return = dict({"question":self.question, "responses":self.responses, "number":self.number, "id": self.id})
+        return _return 
     
 
 class _Questions():
@@ -299,6 +298,15 @@ class _Course_Section_Meetings():
         for i in self.collection.find():
             output.append(i)
         return output
+
+    def insert_and_update(self, question, object_id):
+        if self.collection.find_one({"_id" : object_id}) is not None:
+            old_questions = self.collection.find_one({"_id" : object_id})['questions']
+            if old_questions is not None:
+                self.collection.update_one({"_id":object_id}, {"$set": {"questions":old_questions.append(question.to_dict())}})
+            else:
+                self.collection.update_one({"_id":object_id}, {"$set": {"questions":[question.to_dict()]}})
+
                 
 Teachers = _Teachers()
 Questions = _Questions()
