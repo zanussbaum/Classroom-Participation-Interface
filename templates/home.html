@@ -28,11 +28,24 @@
                 <select class="form-control" name="course">
                   {%if courses%}
                     {%for course in courses%}
-                    <option>{{course.course + " " + course.section + " " + course.teacher.name}}</option>
+                    <option>{{course}}</option>
                     {%endfor%}
                   {%endif%}
+                    <option value="CSC322">Programming Languages</option>
+                    <option value="CSC371">Machine Learning</option>
                   </select>
               </div>
+              <div class="form-group">
+                <label for="exampleInputPassword1">Section</label>
+                <select name="section">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                  </select>
+              </div>
+              <div class="form-group">
+                  <label for="exampleInputPassword1">Professor Name</label>
+                  <input name='teacherName' type="text" id="teacher" placeholder="Professor Name"/>
+                </div>
               <div class="form-group form-check">
                   <input type='radio' name='person' value='teacher'>Teacher<br>
                   <input type='radio' name='person' value='student'>Student<br>
