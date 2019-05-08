@@ -28,8 +28,6 @@ class Teacher:
     def to_dict(self):
         _return = dict(name = self.name)
         return _return if self.id is None else _return.update({"_id": self.id})
-    
-    
 
 class _Teachers(Teacher):
     def __init__(self):
@@ -38,9 +36,8 @@ class _Teachers(Teacher):
      
     #I believe we have to pass in all the information for a particular teacher here, not just the name
     def find_one(self, query: dict) -> 'Teacher':
-        for i in self.collection.find():
-            if i['name'] == query['name']:
-                return Teacher(i)
+        item = self.collection.find_one(query)
+        return None if item is None else Teacher(item)
 
     def find(self, query: dict) -> list('Teachers'):
         return (Teacher(item) for item in self.collection.find(query))
@@ -54,7 +51,7 @@ class Question:
     def __init__(self, data: dict):
         self.question = data['question']
         
-        self.responses = None
+        self.responses = {}
 
         self.number = None
             
@@ -77,13 +74,8 @@ class Question:
        
 
     def addResponse(self, data: dict):
-        if self.responses == None:
-            self.responses = {}
-            if data['user_name'] not in self.responses:
-                self.responses[data['user_name']] = data['message']
-        else:
-            if data['user_name'] not in self.responses:
-                self.responses[data['user_name']] = data['message']
+        if data['user_name'] not in self.responses:
+            self.responses[data['user_name']] = data['message']
             
     def to_dict(self):
         _return = dict(question=self.question, responses = self.responses, number = self.number)
@@ -113,23 +105,25 @@ class _Questions(Question):
 
 # Dict key 'teacher' here must be a teacher object 
 class Course_Section(Teacher):
-    def __init__(self, data: dict):
+    def __init__(self, data: dict, teacher: 'Teacher'):
         #course "CSC353"
         self.course = data['course']
-
         #Section A
         self.section = data['section']
         
-        #Title
-        self.title = data['name']
+        #self.class_number = data['class_number']
+        
+        #Teacher object
+        self.teacher = teacher
 
-        #Teacher Id 
-        self.teacher_id = data['teacher_id']
+        if data['_id'] is None:
+            self.id = None
+        else:
+            self.id = data['_id']
 
-        #teacher name for querying
-        self.teacher_name = data['teacher_name']
-
-        self.id = None
+    def returnCourseSectionDetails(self):
+        temp = "Course Sections Details: " + "\nProfessor: " + self.teacher.getName() + "\nCourse: " + self.course + "\nSection: " + self.section 
+        return temp
 
     def getCourse(self):
         return self.course
@@ -137,17 +131,14 @@ class Course_Section(Teacher):
     def getSection(self):
         return self.section
 
+    def getProfData(self):
+        return self.teacher
+
     def getId(self):
         return self.id
-    
-    def getTeacherId(self):
-        return self.teacher_id
-    
-    def getTeacherName(self):
-        return self.teacher_name
 
     def to_dict(self):
-        _return = dict(name = self.title, course= self.course, section = self.section, teacher_name = self.teacher_name, teacher_id = self.teacher_id)
+        _return = dict(course= self.course, section = self.section, teacher = self.teacher.to_dict())
         return _return if self.id is None else _return.update({'_id': self.id})
 
 class _Course_Sections(Course_Section,Teacher):
@@ -163,10 +154,6 @@ class _Course_Sections(Course_Section,Teacher):
         for i in self.collection.find():
             if i['professor_data'].getName() == teacher.getName():
                 return i.getId()
-
-    def find_one(self, query: dict) -> 'Course_Section':
-        item = self.collection.find_one(query)
-        return None if item is None else Course_Section(item)
 
     def setClassNumber(self, teacher, course, section):
         class_number = 1
@@ -190,27 +177,21 @@ class _Course_Sections(Course_Section,Teacher):
                 return i['teacher'].getName()
 
 class Course_Section_Meeting(Course_Section, Question, Teacher):
-    def __init__(self, data: dict):
-        self.questions = None
+    def __init__(self, course_section: 'Course_Section'):
+        self.questions = []
         self.date = datetime.datetime.now()
         self.id = None
-        self.session_number = data['session_number']
-        self.course_section_id = data['course_section_id']
+        self.session_number = 1
+        self.course_section = course_section
 
     def setSessionNumber(self, number):
         self.session_number = number
         
     #adding questions to a question list
     def addQuestion(self, question: 'Question'):
-        if self.questions is None:
-            if question is not None:
-                self.questions  = []
-                self.questions.append(question.getQuestionId())
-        else:
-            if question is not None:
-                self.questions.append(question.getQuestionId())
-                
-
+        if question is not None:
+            self.questions.append(question)
+            
     def getSessionNumber(self):
         return self.session_number
     
@@ -221,10 +202,10 @@ class Course_Section_Meeting(Course_Section, Question, Teacher):
         return self.id
 
     def getCourseSection(self):
-        return self.course_section_id
+        return self.course_section
 
     def to_dict(self):
-        _return = dict(questions=self.questions, date = self.date, course_section_id = self.course_section_id, session_number = self.session_number)
+        _return = dict(questions= self.questions, date = self.date, course_section = self.course_section.to_dict(), session_number = self.session_number)
         return _return if self.id is None else _return.update({"_id" : self.id})
 
 class _Course_Section_Meetings(Course_Section, Question, Teacher):
@@ -237,18 +218,10 @@ class _Course_Section_Meetings(Course_Section, Question, Teacher):
         course_section_meeting.id = obj_id.inserted_id
         return course_section_meeting
 
-    def find_one(self, data: dict):
-        item = self.collection.find_one(data)
-        return Course_Section_Meeting(item)
-
-        
-    def find_all_meetings(self, section: 'Course_Section_Meeting'):
-        num_meetings = 1
-        #section_name = section.getName()
-        for i in self.collection.find():
-            if section.getId() == i['course_section_id']:
-                num_meetings+=1
-        return num_meetings
+    def find_one(self, query:dict):
+        id = query['meeting']
+        item = self.collection.find_one({'_id': id})
+        return None if item is None else Course_Section_Meeting(item)
 
     def findByProfessor(self, teacher: 'Teacher'):
         for i in self.collection.find():
@@ -256,9 +229,9 @@ class _Course_Section_Meetings(Course_Section, Question, Teacher):
                 return i
    
     def getNumSessions(self, section: 'Course_Section'):
-        number = 1
+        number = 0
         for i in self.collection.find():
-            if section == i['course_section']:
+            if section == i['course_section_meeting'].getCourseSection():
                 number += 1
         return number
 

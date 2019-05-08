@@ -44,66 +44,80 @@ def home():
         course = request.form.get('course')
         section = request.form.get('section')
         person = request.form.get('person')
+        
 
         #this is where we would make a database call to see class number
         class_number = 1
+        """This logic is the only logic I am a bit unsure of, I will fix it in the morning. I confused
+        the table names, so I just have to double check and make sure that it still works, I believe
+        everything is fine
+
+        """
         if person == 'teacher':
-            #Grab the teacher object based off the name of the teacher
-            current_teacher : 'Teacher'
-            current_teacher = Teachers.find_one({"name" : teacher})
-            
-            
-            #If the teacher isn't in our database, add it to the database
-            # if current_teacher is None: # 'Add the teacher to the DB'
-            #     print("add")
-            #     current_teacher = Teacher(data={"name": teacher})
-            #     Teachers.insert(teacher = current_teacher)
-            
-            #Grab the Section object based off the department, course, section, name and the teacher object
-            current_section : 'Course_Section'
+            class_number = Sections.setClassNumber(teacher=teacher,course=course,section=section)
+            #if the class number is still one, it means that this is our first class and must be the first time for the teacher
+            whichTeacher : 'Teacher'
+            if class_number == 1:
+                #insert a new teacher
+                try:
+                    data = {'name': teacher, '_id': None}
+                    whichTeacher = Teacher(data=data)
+                    Teachers.insert(whichTeacher)
+                except Exception as ex:
+                    print (str(ex))
+
+            else:
+                #find the teacher
+                try:
+                    whichTeacherDict = Sections.returnTeacher(name=teacher)
+                    whichTeacher = Teachers.find_one(query = whichTeacherDict)
+                except Exception as ex:
+                    print (str(ex))
+
+            #data dictionary declarations for session insertion
+            tempDict = {}
+            tempDict['course'] = course
+            tempDict['section'] = section
+            tempDict['_id'] = None
+
+            #Creating a new Course_Section
             try:
-                current_section = Sections.find_one(query={"course": course, "section": section, "teacher_name" : teacher})
+                newClass : 'Course_Section'
+                newClass = Course_Section(data=tempDict, teacher=whichTeacher)
             except Exception as ex:
-                print("current_section")
+                print ("newClass exception")
+                print (str(ex))
+
+            #Insert the newClass into our Sections relation
+            try: 
+                Sections.insert_one(course_section=newClass)
+            except Exception as ex:
+                print("insertion problem")
                 print(str(ex))
 
-            """
-            #If the current section doesnt exist, then we havent added all the classes to the DB and we add it in here 
-            if current_section is None: # 'Add the section to the DB'
-                current_section = Course_Section(data={"course": course, "section": section, "_id" : None}, new_teacher = current_teacher)
-                Sections.insert_one(course_section=current_section)
-            """
-            #Grab the object id's for future use, this part is tested and works correctly
-            ids['teacher'] = current_teacher.getId()
-            ids['section'] = current_section.getId()
-            print(current_section.getId())
+            #Set the current section id to be the session we just added
+            ids['section'] = newClass.getId()
+
+            #Create a new meeting by passing in the newClass we just created
+            try:
+                newMeeting : 'Course_Section_Meeting'
+                newMeeting = Course_Section_Meeting(course_section = newClass)
+            except Exception as ex:
+                print(str(ex))
+
+            #set the Session Number to be the class number
+            try:
+                newMeeting.setSessionNumber(number = class_number)
+            except Exception as ex:
+                print(str(ex))
+
+            #insert the new meeting into Meetings
+            try:
+                Meetings.insert_one(course_section_meeting=newMeeting)
+            except Exception as ex:
+                print(str(ex))
             
-
-            """
-            Set the class_number by iterating over the table of Meetings, and for each meeting 
-            if the Section object is the same, we know that its a meeting and we increment the meeting number. 
-            Once we have iterated over all the meetings, we return the class_number
-            """
-            class_number = Meetings.find_all_meetings(section  = current_section)
-
-            #Create a new meeting object, and set the class number to be the number we just calculated
-            try:
-                current_meeting : 'Course_Section_Meeting'
-                current_meeting = Course_Section_Meeting({'session_number': class_number, 'course_section_id': current_section.getId()})
-                # class_number = Meetings.getNumSessions(section = current_section)
-            except Exception as ex:
-                print("current_meeting")
-                print(str(ex))
-
-            #Insert the new meeting into our Meetings Table
-            try:
-                Meetings.insert_one(course_section_meeting=current_meeting)
-            except Exception as ex:
-                print("Meetings insertion")
-                print(str(ex))
-
-            #Grab the object id for future use
-            ids['meeting'] = current_meeting.getId()
+            ids['meeting'] = newMeeting.getId()
 
         if person == 'teacher':
             hash = getrandbits(128)
@@ -152,9 +166,6 @@ def strip_url(json, is_student):
 
     return url
 
-def extract_url(url):
-    return url.split('/')
-
 @socketio.on('student connect')
 def student_connection(json):
     student = request.sid
@@ -202,8 +213,6 @@ def student_response(json, methods=['GET', 'POST']):
 
     url = strip_url(json['url'],True)
 
-    print(url)
-
     current_Question : 'Question'
     current_Question = Questions.getOneQuestion(query = ids)
 
@@ -230,12 +239,7 @@ def teacher_question(json, methods=['GET', 'POST']):
 
     #can parse json here to put into database   
     print(json)
-
-    url_list = extract_url(url=url)
-
-    # print("urlList")
-    # for i in url_list:
-    #     print(i)
+    
     #Try to create the new question, passing in the question text
     try:
         newQuestion : 'Question'
@@ -245,37 +249,12 @@ def teacher_question(json, methods=['GET', 'POST']):
         print(str(ex))
 
     #questions is simply a list to keep track of the number of questions we have, it is a flask work around
-    
+    global questions
     questions.append(1)
 
     #set the question number for this session
     newQuestion.setQuestionNumber(counter = len(questions))
 
-    #finding the object id's for teacher
-    thisTeacher : 'Teacher'
-    try:
-        
-        thisTeacher = Teachers.find_one({'name': url_list[1]})
-        
-    except Exception as ex:
-        print(str(ex))
-
-    thisTeacherId = thisTeacher.getId()
-    print(thisTeacherId)
-    #finding the object id's for Section
-    thisSection : 'Course_Section'
-    try:  
-        thisSection = Sections.find_one({'course': url_list[1], 'section': url_list[2], 'teacher_id' : thisTeacherId})
-    except Exception as ex:
-        print("find section")
-        print(str(ex))
-    print(thisSection.getCourse())
-    print(thisSection.getSection())
-    print(thisSection.getTeacherName())
-    thisSectionId = thisSection.getId()
-    print(thisSectionId)
-    
-    
     """ Insert the finished question into the Questions relation
         ids['question'] holds the last question previously posed by the professor
         Assuming that a professor will only ask one question at a time, this allows us to 
@@ -288,18 +267,13 @@ def teacher_question(json, methods=['GET', 'POST']):
         print("Question Insertion")
         print(str(ex))
     
-   
     #Get the current meeting
-    currentMeeting : 'Course_Section_Meeting'
     try:
-        
-        query = dict(session_number= url_list[4], course_section_id =thisSectionId)
-        print(query)
-        currentMeeting = Meetings.find_one({'session_number': url_list[4], "course_section_id" : thisSectionId})
+        currentMeeting : 'Course_Section_Meeting'
+        currentMeeting = Meetings.find_one(query = ids)
     except Exception as ex:
         print("find current meeting")
         print(str(ex))
-    print(currentMeeting.getCourseSection())
 
     #Add the new Question to the current meeting relation
     try:
