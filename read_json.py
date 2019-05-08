@@ -1,7 +1,8 @@
 import json
-from db import Teachers, Teacher, Questions, Question, Sections, Course_Section, Course_Section_Meeting, Meetings
+from db import Teachers, Teacher, Questions, Question, Sections, Course_Section, Course_Section_Meeting, Meetings, drop_database
 
 def read_json(file):
+    drop_database()
     with open("course-dump.json", 'r') as json_file:
         for line in json_file:
             dict = json.loads(line)

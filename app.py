@@ -24,6 +24,7 @@ TODO:
 """
 
 app = Flask(__name__)
+app.debug = True
 socketio = SocketIO(app)
 
 people = {}
@@ -40,7 +41,6 @@ def about():
 def home():
     if request.method == 'POST':
         course_tuple = request.form['course'].split(" ")
-        print(course_tuple)
 
         person = request.form['person']
         course = course_tuple[0]
@@ -53,55 +53,27 @@ def home():
         class_number = 1
         if person == 'teacher':
             #Grab the teacher object based off the name of the teacher
-            current_teacher : 'Teacher'
             current_teacher = Teachers.find_one({"name" : teacher})
             
-            
-            #If the teacher isn't in our database, add it to the database
-            # if current_teacher is None: # 'Add the teacher to the DB'
-            #     print("add")
-            #     current_teacher = Teacher(data={"name": teacher})
-            #     Teachers.insert(teacher = current_teacher)
-            
             #Grab the Section object based off the department, course, section, name and the teacher object
-            current_section : 'Course_Section'
             try:
                 current_section = Sections.find_one(query={"course": course, "section": section, "teacher_name" : teacher})
             except Exception as ex:
                 print("current_section")
                 print(str(ex))
 
-            """
-            #If the current section doesnt exist, then we havent added all the classes to the DB and we add it in here 
-            if current_section is None: # 'Add the section to the DB'
-                current_section = Course_Section(data={"course": course, "section": section, "_id" : None}, new_teacher = current_teacher)
-                Sections.insert_one(course_section=current_section)
-            """
-            #Grab the object id's for future use, this part is tested and works correctly
-            ids['teacher'] = current_teacher.getId()
-            ids['section'] = current_section.getId()
-            print(current_section.getId())
-            
-
-            """
-            Set the class_number by iterating over the table of Meetings, and for each meeting 
-            if the Section object is the same, we know that its a meeting and we increment the meeting number. 
-            Once we have iterated over all the meetings, we return the class_number
-            """
             class_number = Meetings.find_all_meetings(section  = current_section)
 
             #Create a new meeting object, and set the class number to be the number we just calculated
             try:
-                current_meeting : 'Course_Section_Meeting'
-                current_meeting = Course_Section_Meeting({'session_number': class_number, 'course_section_id': current_section.getId()})
-                # class_number = Meetings.getNumSessions(section = current_section)
+                current_meeting = Course_Section_Meeting({'session_number': class_number, 'course_section': current_section})
             except Exception as ex:
                 print("current_meeting")
                 print(str(ex))
 
             #Insert the new meeting into our Meetings Table
             try:
-                Meetings.insert_one(course_section_meeting=current_meeting)
+                Meetings.insert_one(current_meeting)
             except Exception as ex:
                 print("Meetings insertion")
                 print(str(ex))
@@ -114,7 +86,6 @@ def home():
             return redirect(url_for('teacher', teacher=teacher, course=course, section=section, class_number=class_number, hash=hash))
         else:
             return redirect(url_for('student', teacher=teacher, course=course, section=section, class_number=class_number))
-    
     courses = Sections.find()
     return render_template('home.html',courses=courses)
     
@@ -233,18 +204,11 @@ def teacher_question(json, methods=['GET', 'POST']):
 
     url = strip_url(json['url'], False)
 
-    #can parse json here to put into database   
-    print(json)
-
     url_list = extract_url(url=url)
 
-    # print("urlList")
-    # for i in url_list:
-    #     print(i)
     #Try to create the new question, passing in the question text
     try:
-        newQuestion : 'Question'
-        newQuestion = Question(data = json)
+        newQuestion = Question(json)
     except Exception as ex:
         print("question formation")
         print(str(ex))
@@ -257,37 +221,24 @@ def teacher_question(json, methods=['GET', 'POST']):
     newQuestion.setQuestionNumber(counter = len(questions))
 
     #finding the object id's for teacher
-    thisTeacher : 'Teacher'
+
     try:
-        
         thisTeacher = Teachers.find_one({'name': url_list[1]})
         
     except Exception as ex:
         print(str(ex))
 
     thisTeacherId = thisTeacher.getId()
-    print(thisTeacherId)
-    #finding the object id's for Section
-    thisSection : 'Course_Section'
+
     try:  
-        thisSection = Sections.find_one({'course': url_list[1], 'section': url_list[2], 'teacher_id' : thisTeacherId})
+        thisSection = Sections.find_one({'course': url_list[2], 'section': url_list[3], 'teacher_id' : thisTeacherId})
     except Exception as ex:
         print("find section")
         print(str(ex))
-    print(thisSection.getCourse())
-    print(thisSection.getSection())
-    print(thisSection.getTeacherName())
-    thisSectionId = thisSection.getId()
-    print(thisSectionId)
+   
     
-    
-    """ Insert the finished question into the Questions relation
-        ids['question'] holds the last question previously posed by the professor
-        Assuming that a professor will only ask one question at a time, this allows us to 
-        get the question and then add a response to it
-    """
     try:
-        Questions.insert_one(question=newQuestion)
+        Questions.insert_one(newQuestion)
         ids['question'] = newQuestion.getQuestionId()
     except Exception as ex:
         print("Question Insertion")
@@ -295,18 +246,13 @@ def teacher_question(json, methods=['GET', 'POST']):
     
    
     #Get the current meeting
-    currentMeeting : 'Course_Section_Meeting'
     try:
-        
-        query = dict(session_number= url_list[4], course_section_id =thisSectionId)
-        print(query)
-        currentMeeting = Meetings.find_one({'session_number': url_list[4], "course_section_id" : thisSectionId})
+        query = dict(session_number= url_list[4], course_section_id =thisSection.getId())
+        currentMeeting = Meetings.find_one({"course_section" : thisSection.to_dict()})
     except Exception as ex:
         print("find current meeting")
         print(str(ex))
-    print(currentMeeting.getCourseSection())
-
-    #Add the new Question to the current meeting relation
+    
     try:
         currentMeeting.addQuestion(question = newQuestion)
     except Exception as ex:

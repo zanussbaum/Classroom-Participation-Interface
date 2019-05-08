@@ -7,8 +7,10 @@ MONGO_PORT = 27017
 MONGO_DATABASE = "VirtualClassroom"
 MONGO_CLIENT = client = MongoClient(MONGO_HOST,MONGO_PORT)
 
-def get_database() -> 'pymongo.database.Database':
+
+def drop_database():
     MONGO_CLIENT.drop_database(MONGO_DATABASE)
+def get_database() -> 'pymongo.database.Database':
     return MONGO_CLIENT.get_database(MONGO_DATABASE)
 
 class Teacher:
@@ -138,7 +140,7 @@ class Course_Section(Teacher):
         self.id = None
         
     def __str__(self):
-        str = self.course + " " + self.section + " " + self.teacher.__str__()
+        str = self.course + " " + self.section + " " + self.teacher_name
         return str
 
     def __repr__(self):
@@ -219,7 +221,7 @@ class Course_Section_Meeting(Course_Section, Question, Teacher):
         self.date = datetime.datetime.now()
         self.id = None
         self.session_number = data['session_number']
-        self.course_section_id = data['course_section_id']
+        self.course_section = data['course_section']
 
     def setSessionNumber(self, number):
         self.session_number = number
@@ -245,10 +247,10 @@ class Course_Section_Meeting(Course_Section, Question, Teacher):
         return self.id
 
     def getCourseSection(self):
-        return self.course_section_id
+        return self.course_section._id
 
     def to_dict(self):
-        _return = dict(questions=self.questions, date = self.date, course_section_id = self.course_section_id, session_number = self.session_number)
+        _return = dict(questions=self.questions, date = self.date, course_section = self.course_section.to_dict(), session_number = self.session_number)
         return _return if self.id is None else _return.update({"_id" : self.id})
 
 class _Course_Section_Meetings():
@@ -269,10 +271,8 @@ class _Course_Section_Meetings():
     def find_all_meetings(self, section: 'Course_Section_Meeting'):
         num_meetings = 1
         #section_name = section.getName()
-        for i in self.collection.find():
-            if section.getId() == i['course_section_id']:
-                num_meetings+=1
-        return num_meetings
+        result = self.collection.find(section.to_dict()).count()
+        return num_meetings if result < num_meetings else result
 
     def findByProfessor(self, teacher: 'Teacher'):
         for i in self.collection.find():

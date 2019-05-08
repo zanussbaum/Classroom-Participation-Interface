@@ -28,7 +28,7 @@
                 <select class="form-control" name="course">
                   {%if courses%}
                     {%for course in courses%}
-                    <option>{{course.course + " " + course.section + " " + course.teacher.name}}</option>
+                    <option>{{course.course + " " + course.section + " " + course.teacher_name}}</option>
                     {%endfor%}
                   {%endif%}
                   </select>
