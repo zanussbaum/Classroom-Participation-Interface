@@ -29,7 +29,7 @@ socketio = SocketIO(app)
 
 people = {}
 which_room = {}
-ids = {}
+question_id = {}
 questions = []
 
 @app.route('/about')
@@ -79,7 +79,7 @@ def home():
                 print(str(ex))
 
             #Grab the object id for future use
-            ids['meeting'] = current_meeting.getId()
+            # question_id['meeting'] = current_meeting.getId()
 
         if person == 'teacher':
             hash = getrandbits(128)
@@ -176,16 +176,15 @@ def student_response(json, methods=['GET', 'POST']):
     #can parse json here to store into database
     print('received a student response: ' + str(json))
 
-    url = strip_url(json['url'],True)
+    url = strip_url(json['url'], True)
+    url = url.replace('student','teacher')
 
-    print(url)
-
-    current_Question : 'Question'
-    current_Question = Questions.getOneQuestion(query = ids)
+    current_Question = Questions.getOneQuestion(question_id[url])
 
     if current_Question is not None:
         try:
-            current_Question.addResponse(data = json)
+            current_Question.addResponse(json)
+            Questions.insert_and_update(current_Question,question_id[url])
         except Exception as ex:
             print("Question addition")
             print(str(ex))
@@ -204,21 +203,23 @@ def teacher_question(json, methods=['GET', 'POST']):
 
     url = strip_url(json['url'], False)
 
-    url_list = extract_url(url=url)
+    url_list = extract_url(url)
 
     #Try to create the new question, passing in the question text
     try:
         newQuestion = Question(json)
+        questions.append(1)
+        newQuestion.setQuestionNumber(counter = len(questions))
     except Exception as ex:
         print("question formation")
         print(str(ex))
 
     #questions is simply a list to keep track of the number of questions we have, it is a flask work around
     
-    questions.append(1)
+    
 
     #set the question number for this session
-    newQuestion.setQuestionNumber(counter = len(questions))
+    
 
     #finding the object id's for teacher
 
@@ -239,7 +240,7 @@ def teacher_question(json, methods=['GET', 'POST']):
     
     try:
         Questions.insert_one(newQuestion)
-        ids['question'] = newQuestion.getQuestionId()
+        question_id[url] = newQuestion.getQuestionId()
     except Exception as ex:
         print("Question Insertion")
         print(str(ex))
@@ -247,7 +248,6 @@ def teacher_question(json, methods=['GET', 'POST']):
    
     #Get the current meeting
     try:
-        query = dict(session_number= url_list[4], course_section_id =thisSection.getId())
         currentMeeting = Meetings.find_one({"course_section" : thisSection.to_dict()})
     except Exception as ex:
         print("find current meeting")

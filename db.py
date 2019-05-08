@@ -62,9 +62,14 @@ class Question:
     def __init__(self, data: dict):
         self.question = data['question']
         
-        self.responses = None
-
-        self.number = None
+        if 'responses' in data:
+            self.responses = data['responses']
+        else:
+            self.responses = None
+        if 'number' in data:
+            self.number = data['number']
+        else:
+            self.number = None
             
         self.id = None
 
@@ -104,8 +109,7 @@ class _Questions():
         self.db = get_database()
         self.collection = self.db["questions"]
 
-    def getOneQuestion(self, query: dict) -> 'Question':
-        id = query['question']
+    def getOneQuestion(self, id) -> 'Question':
         item = self.collection.find_one({"_id" : id})
         return None if item is None else Question(item)
     
@@ -116,6 +120,10 @@ class _Questions():
         obj_id = self.collection.insert_one(question.to_dict())
         question.id = obj_id.inserted_id
         return question
+
+    def insert_and_update(self, question, object_id):
+        if self.collection.find_one({"_id" : object_id}) is not None:
+            self.collection.update_one({"_id":object_id}, {"$set": {"responses":question.responses}})
 
 
 
@@ -231,10 +239,10 @@ class Course_Section_Meeting(Course_Section, Question, Teacher):
         if self.questions is None:
             if question is not None:
                 self.questions  = []
-                self.questions.append(question.getQuestionId())
+                self.questions.append(question)
         else:
             if question is not None:
-                self.questions.append(question.getQuestionId())
+                self.questions.append(question)
                 
 
     def getSessionNumber(self):
