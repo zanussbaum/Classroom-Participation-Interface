@@ -303,9 +303,10 @@ class _Course_Section_Meetings():
         if self.collection.find_one({"_id" : object_id}) is not None:
             old_questions = self.collection.find_one({"_id" : object_id})['questions']
             if old_questions is not None:
-                self.collection.update_one({"_id":object_id}, {"$set": {"questions":old_questions.append(question.to_dict())}})
+                old_questions.append(question)
+                self.collection.update_one({"_id":object_id}, {"$set": {"questions":old_questions}})
             else:
-                self.collection.update_one({"_id":object_id}, {"$set": {"questions":[question.to_dict()]}})
+                self.collection.update_one({"_id":object_id}, {"$set": {"questions":[question]}})
 
                 
 Teachers = _Teachers()

@@ -184,12 +184,12 @@ def student_response(json, methods=['GET', 'POST']):
     url = strip_url(json['url'], True)
     url = url.replace('student','teacher')
 
-    current_Question = Questions.getOneQuestion(question_id[url])
+    current_question = Questions.getOneQuestion(question_id[url])
 
-    if current_Question is not None:
+    if current_question is not None:
         try:
-            current_Question.addResponse(json)
-            Questions.insert_and_update(current_Question,question_id[url])
+            current_question.addResponse(json)
+            Questions.insert_and_update(current_question,question_id[url])
         except Exception as ex:
             print("Question addition")
             print(str(ex))
@@ -260,7 +260,7 @@ def teacher_question(json, methods=['GET', 'POST']):
     
     try:
         currentMeeting.addQuestion(question = newQuestion)
-        Meetings.insert_and_update(newQuestion, meeting_id[url])
+        Meetings.insert_and_update(question_id[url], meeting_id[url])
     except Exception as ex:
         print("add question to meeting")
         print(str(ex))
